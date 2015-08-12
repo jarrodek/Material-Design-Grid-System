@@ -196,10 +196,12 @@
         },
         _applyStyles: function () {
 
-          if (this.columnWidth < 8)
+          if (this.columnWidth < 8){
             return;
-          if (!this._isFit())
+          }
+          if (!this._isFit()){
             return;
+          }
 
           var columnMultiplier = 0;
           if (this.columns <= 2) {
@@ -219,11 +221,13 @@
         },
         _isFit: function () {
           var prev = Polymer.dom(this.root).querySelector('.grid-preview');
-          if (!prev)
+          if (!prev){
             return;
+          }
           var containerWidth = prev.scrollWidth;
-          if (containerWidth === 0)
+          if (containerWidth === 0){
             return true;
+          }
 
           return containerWidth >= this.pageWidth;
         }

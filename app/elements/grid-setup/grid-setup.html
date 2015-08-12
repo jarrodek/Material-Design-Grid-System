@@ -163,8 +163,9 @@
           this.set('currentPageWidth', e.rootTarget.immediateValue);
         },
         _columnsChanged: function () {
-          if (!this.gridColumnsSelected && this.gridColumnsSelected !== 0)
+          if (!this.gridColumnsSelected && this.gridColumnsSelected !== 0){
             return;
+          }
           var no = this.gridColumnsSelected + 1;
           this.set('gridColumns', no);
         },

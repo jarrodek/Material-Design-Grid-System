@@ -1,0 +1,55 @@
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+application: material-grid
+
+handlers:
+- url: /bower_components
+  static_dir: dist/bower_components
+
+- url: /elements
+  static_dir: dist/elements
+
+- url: /images
+  static_dir: dist/images
+
+- url: /scripts
+  static_dir: dist/scripts
+
+- url: /styles
+  static_dir: dist/styles
+
+- url: /sw-toolbox
+  static_dir: dist/sw-toolbox
+
+- url: /favicon\.ico
+  static_files: dist/favicon.ico
+  upload: favicon\.ico
+
+- url: /index\.html
+  static_files: dist/index.html
+  upload: dist/index.html
+
+- url: /manifest\.json
+  static_files: dist/manifest.json
+  upload: dist/manifest.json
+
+- url: /precache\.json
+  static_files: dist/precache.json
+  upload: dist/precache.json
+
+- url: /robots\.txt
+  static_files: dist/robots.txt
+  upload: dist/robots.txt
+
+- url: /sw-import\.js
+  static_files: dist/sw-import.js
+  upload: dist/sw-import.js
+
+- url: /.*
+  static_files: dist/index.html
+  upload: dist/index.html
+
+skip_files:
+  ^[^dist].*$
