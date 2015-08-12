@@ -1,14 +1,14 @@
 <dom-module id="grid-preview">
   <style>
     :host {
-      display: block;
       --grid-margin-width: 8px;
       --grid-gutter-width: 8px;
       --grid-column-width: 8px;
       --grid-pseudo-content-width: 1024;
       --grid-pseudo-content-box-width: 76px;
+      @apply(--layout-vertical);
     }
-    .grid-preview {
+    .grid-preview-panel {
       @apply(--layout-horizontal);
     }
     .grid-item{
@@ -128,7 +128,7 @@
             </paper-material>
           </div>
         </div>
-        <div class="grid-preview fit">
+        <div class="grid-preview-panel fit">
           <div class="grid-item margin"></div>
           <span>{{_columns.0.n}}</span>
           <template is="dom-repeat" items="{{_columns}}">
@@ -199,9 +199,9 @@
           if (this.columnWidth < 8){
             return;
           }
-          if (!this._isFit()){
-            return;
-          }
+//          if (!this._isFit()){
+//            return;
+//          }
 
           var columnMultiplier = 0;
           if (this.columns <= 2) {
@@ -220,7 +220,7 @@
           this.updateStyles();
         },
         _isFit: function () {
-          var prev = Polymer.dom(this.root).querySelector('.grid-preview');
+          var prev = Polymer.dom(this.root).querySelector('.grid-preview-panel');
           if (!prev){
             return;
           }
