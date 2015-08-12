@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>grid-setup</title>
+
+    <script src="../../bower_components/webcomponentsjs/webcomponents.min.js"></script>
+    <link rel="import" href="../../bower_components/polymer/polymer.html">
+    <script src="../../bower_components/web-component-tester/browser.js"></script>
+    <script src="../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+    <link rel="import" href="../../bower_components/test-fixture/test-fixture.html">
+    <!-- Import the element to test -->
+    <link rel="import" href="../elements/grid-setup/grid-setup.html">
+
+  </head>
+  <body>
+
+  <test-fixture id="basic">
+    <template>
+      <grid-setup></grid-setup>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite('options items tests', function () {
+      var setupElement;
+
+      setup(function () {
+        setupElement = fixture('basic');
+      });
+
+      test('Grid gutters options should be 4', function () {
+        var options = setupElement.querySelectorAll('.grid-gutters paper-radio-button');
+        assert.equal(4, options.length);
+      });
+
+      test('Grid margins options should be 4', function () {
+        var options = setupElement.querySelectorAll('.grid-margins paper-radio-button');
+        assert.equal(4, options.length);
+      });
+
+      test('Grid columns options should be 12', function () {
+        var options = setupElement.querySelectorAll('.grid-columns paper-menu paper-item');
+        assert.equal(12, options.length);
+      });
+      test('Paper slider exists', function () {
+        var options = setupElement.querySelectorAll('.grid-page-width paper-slider');
+        assert.equal(1, options.length);
+      });
+
+      test('Max page width input', function () {
+        var options = setupElement.querySelectorAll('#maxPageWidth');
+        assert.equal(1, options.length);
+      });
+      test('Page width input', function () {
+        var options = setupElement.querySelectorAll('.width-manual-setup');
+        assert.equal(1, options.length);
+      });
+    });
+    suite('calculations tests', function () {
+      var setupElement;
+
+      setup(function () {
+        setupElement = fixture('basic');
+      });
+      
+      test('Setup currentPageWidth on gridPageWidth change', function (done) {
+        setupElement.gridPageWidth = 500;
+        flush(function () {
+          assert.equal(setupElement.currentPageWidth, 500);
+          done();
+        });
+      });
+
+      test('Correct column counting', function () {
+        for (var i = 0; i < 12; i++) {
+          setupElement.gridColumnsSelected = i;
+          assert.equal(setupElement.gridColumns, i + 1);
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+{
+  "elements": {
+    "template": {
+      "attributes": {
+        "is": {},
+        "items": {},
+        "if": {}
+      }
+    },
+    "paper-menu-button": {},
+    "paper-button": {
+      "attributes": {
+        "raised": {}
+      }
+    },
+    "paper-slider": {
+      "attributes": {
+        "immediate-value": {},
+        "on-immediate-value-change": {},
+        "min": {},
+        "pin": {},
+        "max": {},
+        "value": {}
+      }
+    },
+    "platinum-sw-cache": {
+      "attributes": {
+        "precache-file": {},
+        "default-cache-strategy": {}
+      }
+    },
+    "paper-radio-group": {
+      "attributes": {
+        "selected": {}
+      }
+    },
+    "paper-radio-button": {
+      "attributes": {
+        "name": {}
+      }
+    },
+    "platinum-sw-register": {
+      "attributes": {
+        "auto-register": {},
+        "on-service-worker-installed": {},
+        "clients-claim": {},
+        "skip-waiting": {}
+      }
+    },
+    "dom-module": {
+      "attributes": {
+        "id": {}
+      }
+    },
+    "paper-material": {
+      "attributes": {
+        "elevation": {},
+        "class": {}
+      }
+    },
+    "paper-input": {
+      "attributes": {
+        "min": {},
+        "label": {},
+        "type": {},
+        "value": {}
+      }
+    }
+  },
+  "attributes": {
+    "is": {
+      "context": "style"
+    },
+    "id": {},
+    "class": {}
+  }
+}

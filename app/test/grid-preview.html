@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>grid-setup</title>
+
+    <script src="../../bower_components/webcomponentsjs/webcomponents.min.js"></script>
+    <link rel="import" href="../../bower_components/polymer/polymer.html">
+    <script src="../../bower_components/web-component-tester/browser.js"></script>
+    <script src="../../bower_components/test-fixture/test-fixture-mocha.js"></script>
+    <link rel="import" href="../../bower_components/test-fixture/test-fixture.html">
+    <!-- Import the element to test -->
+    <link rel="import" href="../elements/grid-preview/grid-preview.html">
+
+  </head>
+  <body>
+
+  <test-fixture id="basic">
+    <template>
+      <grid-preview></grid-preview>
+    </template>
+  </test-fixture>
+
+  <script>
+    suite('Setup correctly', function () {
+      var setupElement;
+
+      setup(function () {
+        setupElement = fixture('basic');
+        setupElement.pageWidth = 1440;
+        setupElement.margin = 24;
+        setupElement.gutter = 24;
+        setupElement.columns = 12;
+      });
+
+      test('Column elements count', function (done) {
+        assert.equal(setupElement._columns.length, setupElement.columns);
+        flush(function () {
+          var options = setupElement.querySelectorAll('.grid-item.column');
+          assert.equal(setupElement.columns, options.length);
+          done();
+        });
+      });
+      test('Gutter elements count', function (done) {
+        flush(function () {
+          var options = setupElement.querySelectorAll('.grid-item.gutters');
+          assert.equal(setupElement.columns-1, options.length);
+          done();
+        });
+
+      });
+      test('Margin elements count', function (done) {
+        flush(function () {
+          var options = setupElement.querySelectorAll('.grid-item.margin');
+          assert.equal(2, options.length);
+          done();
+        });
+      });
+
+      test('Column width should be 94', function(){
+        assert.equal(94, setupElement.columnWidth);
+      });
+
+      test('Preview content box should be 448 px wide', function(){
+        assert.equal('448px', setupElement.customStyle['--grid-pseudo-content-box-width']);
+      });
+
+    });
+  </script>
+
+</body>
+</html>

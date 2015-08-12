@@ -1,0 +1,180 @@
+<dom-module id="grid-setup">
+  <style>
+    :host {
+
+    }
+    h1{
+      @apply(--paper-font-headline);
+    }
+    paper-material {
+      border-radius: 2px;
+      height: 100%;
+      padding: 16px 0 16px 0;
+      width: calc(98.66% - 16px);
+      margin: 16px auto;
+      background: white;
+    }
+    .grid-options{
+      @apply(--layout-horizontal);
+      @apply(--layout-wrap);
+    }
+    .grid-gutters,
+    .grid-margins,
+    .grid-columns{
+      margin-right: 40px;
+    }
+    .grid-gutters paper-radio-group,
+    .grid-margins paper-radio-group{
+      @apply(--layout-vertical);
+    }
+
+    .grid-page-width{
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+    }
+    .grid-page-width paper-slider{
+      @apply(--layout-flex);
+    }
+
+    #maxPageWidth{
+      max-width: 100px;
+    }
+
+    .width-manual-setup{
+      outline: none;
+      border: none;
+      border-bottom: 1px var(--paper-grey-200) solid;
+      width: 60px;
+      font-size: 16px;
+    }
+
+
+    @media (min-width: 601px) {
+      paper-material {
+        width: calc(98% - 46px);
+        margin-bottom: 32px;
+        padding-left: 30px;
+        padding-right: 30px;
+      }
+    }
+  </style>
+  <template>
+    <paper-material elevation="1">
+      <h1 class="paper-font-display1">Setup grid</h1>
+      <p class="paper-font-subhead">Select the options your grid will be based on</p>
+      <div class="grid-options">
+        <section class="grid-gutters">
+          <p class="paper-font-title">Grid gutters</p>
+          <paper-radio-group selected="{{gridGutters}}">
+            <paper-radio-button name="8">8 dp</paper-radio-button>
+            <paper-radio-button name="16">16 dp</paper-radio-button>
+            <paper-radio-button name="24">24 dp</paper-radio-button>
+            <paper-radio-button name="40">40 dp</paper-radio-button>
+          </paper-radio-group>
+        </section>
+        <section class="grid-margins">
+          <p class="paper-font-title">Grid margins</p>
+          <paper-radio-group selected="{{gridMargins}}">
+            <paper-radio-button name="8">8 dp</paper-radio-button>
+            <paper-radio-button name="16">16 dp</paper-radio-button>
+            <paper-radio-button name="24">24 dp</paper-radio-button>
+            <paper-radio-button name="40">40 dp</paper-radio-button>
+          </paper-radio-group>
+        </section>
+        <section class="grid-columns">
+          <p class="paper-font-title">Number of columns</p>
+          <paper-menu-button>
+            <paper-button raised class="dropdown-trigger">{{gridColumns}}</paper-button>
+            <paper-menu class="dropdown-content" selected="{{gridColumnsSelected}}">
+              <paper-item data-columns="1">1</paper-item>
+              <paper-item data-columns="2">2</paper-item>
+              <paper-item data-columns="3">3</paper-item>
+              <paper-item data-columns="4">4</paper-item>
+              <paper-item data-columns="5">5</paper-item>
+              <paper-item data-columns="6">6</paper-item>
+              <paper-item data-columns="7">7</paper-item>
+              <paper-item data-columns="8">8</paper-item>
+              <paper-item data-columns="9">9</paper-item>
+              <paper-item data-columns="10">10</paper-item>
+              <paper-item data-columns="11">11</paper-item>
+              <paper-item data-columns="12">12</paper-item>
+            </paper-menu>
+          </paper-menu-button>
+        </section>
+      </div>
+      <div>
+        <p class="paper-font-title">Page width</p>
+        <section class="grid-page-width">
+          <paper-slider pin min="320" max="{{maxPageWidth}}" value="{{gridPageWidth}}" immediate-value="{{currentPageWidth}}" on-immediate-value-change="_immediateValueChange"></paper-slider>
+          <paper-input id="maxPageWidth" label="Max width" min="320" type="number" value="{{maxPageWidth}}"></paper-input>
+        </section>
+        <p>Selected page width: <input class="width-manual-setup" value="{{gridPageWidth::input}}"></p>
+      </div>
+    </paper-material>
+  </template>
+
+  <script>
+    (function () {
+      Polymer({
+        is: 'grid-setup',
+        properties: {
+          maxPageWidth: {
+            type: Number,
+            value: 1920
+          },
+          currentPageWidth: {
+            type: Number,
+            value: 1440,
+            notify: true
+          },
+          gridPageWidth: {
+            type: Number,
+            value: 1440,
+            notify: true,
+            observer: '_gridPageWidthChanged'
+          },
+          gridColumnsSelected: {
+            type: Number,
+            notify: true,
+            value: 11,
+            observer: '_columnsChanged'
+          },
+          gridMargins: {
+            type: Number,
+            reflectToAttribute: true,
+            notify: true,
+            value: 8
+          },
+          gridGutters: {
+            type: Number,
+            reflectToAttribute: true,
+            notify: true,
+            value: 8
+          },
+          gridColumns: {
+            type: Number,
+            reflectToAttribute: true,
+            notify: true,
+            value: 12
+          }
+        },
+        _immediateValueChange: function (e) {
+          e = Polymer.dom(e);
+          this.set('currentPageWidth', e.rootTarget.immediateValue);
+        },
+        _columnsChanged: function () {
+          if (!this.gridColumnsSelected && this.gridColumnsSelected !== 0)
+            return;
+          var no = this.gridColumnsSelected + 1;
+          this.set('gridColumns', no);
+        },
+        _gridPageWidthChanged: function(){
+          if(this.gridPageWidth !== this.currentPageWidth){
+            this.set('currentPageWidth', this.gridPageWidth);
+          }
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

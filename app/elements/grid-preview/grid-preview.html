@@ -1,0 +1,234 @@
+<dom-module id="grid-preview">
+  <style>
+    :host {
+      display: block;
+      --grid-margin-width: 8px;
+      --grid-gutter-width: 8px;
+      --grid-column-width: 8px;
+      --grid-pseudo-content-width: 1024;
+      --grid-pseudo-content-box-width: 76px;
+    }
+    .grid-preview {
+      @apply(--layout-horizontal);
+    }
+    .grid-item{
+      height: 100%;
+      min-width: 8px;
+    }
+    .grid-item.margin {
+      width: var(--grid-margin-width);
+    }
+    .grid-item.column{
+      width: var(--grid-column-width);
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+      @apply(--layout-center-justified);
+    }
+    .grid-item.gutters{
+      width: var(--grid-gutter-width);
+    }
+
+    .grid-item.margin,
+    .grid-item.gutters{
+      background-color: rgba(0, 120, 215, 0.3);
+    }
+    .grid-item.page-width{
+      width: 4px;
+      min-width: 1px;
+      background-color: rgba(244, 67, 54, 0.4);
+    }
+
+    paper-material {
+      border-radius: 2px;
+      height: 100%;
+      padding: 16px 0 16px 0;
+      width: calc(98.66% - 16px);
+      margin: 16px auto;
+      background: white;
+    }
+
+    .playbox{
+      position: relative;
+      height: 600px;
+      width: 100%;
+    }
+    .pseudo-content{
+      background-color: var(--google-grey-100);
+      height: 100%;
+      max-width: var(--grid-pseudo-content-width);
+    }
+    .pseudo-header{
+      background-color: #fff;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+      height: 48px;
+    }
+    .pseudo-body{
+      @apply(--layout-vertical);
+      @apply(--layout-center);
+    }
+    .pseudo-block{
+      height: 197px;
+      width: var(--grid-pseudo-content-box-width);
+      max-width: var(--grid-pseudo-content-width);
+      margin: 30px 0;
+      padding: 0;
+    }
+    .pseudo-block ul{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .pseudo-block li{
+      border-bottom-width: 1px;
+      border-bottom-color: var(--paper-grey-200);
+      border-bottom-style: solid;
+      height: 32px;
+    }
+    .pseudo-block li:last-child{
+      border-bottom-width: 0;
+    }
+    @media (min-width: 601px) {
+      paper-material {
+        width: calc(98% - 46px);
+        margin-bottom: 32px;
+        padding-left: 30px;
+        padding-right: 30px;
+      }
+    }
+  </style>
+  <template>
+    <paper-material elevation="1" class="paper-font-body2">
+      <h1 class="paper-font-display1">Grid preview</h1>
+      <p>Column width: <span>{{columnWidth}}</span>dp</p>
+
+
+      <div class="playbox">
+        <div class="pseudo-content">
+          <div class="pseudo-header"></div>
+          <div class="pseudo-body">
+            <paper-material class="pseudo-block">
+              <ul>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+              </ul>
+            </paper-material>
+            <paper-material class="pseudo-block">
+              <ul>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+              </ul>
+            </paper-material>
+          </div>
+        </div>
+        <div class="grid-preview fit">
+          <div class="grid-item margin"></div>
+          <span>{{_columns.0.n}}</span>
+          <template is="dom-repeat" items="{{_columns}}">
+            <div class="grid-item column">{{item.n}}</div>
+            <template is="dom-if" if="{{item.show}}">
+              <div class="grid-item gutters"></div>
+            </template>
+          </template>
+          <div class="grid-item margin"></div>
+          <div class="grid-item page-width"></div>
+        </div>
+      </div>
+
+
+    </paper-material>
+  </template>
+
+  <script>
+    (function () {
+      Polymer({
+        is: 'grid-preview',
+        properties: {
+          pageWidth: {
+            type: Number,
+            reflectToAttribute: true
+          },
+          margin: {
+            type: Number,
+            reflectToAttribute: true
+          },
+          gutter: {
+            type: Number,
+            reflectToAttribute: true
+          },
+          columns: {
+            type: Number,
+            reflectToAttribute: true
+          },
+          _columns: {
+            type: Array,
+            value: []
+          },
+          columnWidth: Number
+        },
+        observers: [
+          'updateGrid(pageWidth, margin, gutter, columns)'
+        ],
+        updateGrid: function (pageWidth, margin, gutter, columns) {
+          this._recalculateColumns();
+          this._recalculateWidths();
+          this._applyStyles();
+        },
+        _recalculateColumns: function () {
+          this.splice('_columns', 0, this._columns.length);
+          for (var i = 0; i < this.columns; i++) {
+            this.push('_columns', {
+              show: i < this.columns - 1,
+              n: i + 1
+            });
+          }
+        },
+        _recalculateWidths: function () {
+          var columnWidth = (+this.pageWidth - +this.margin * 2 - +this.gutter * (this.columns - 1)) / this.columns;
+          this.set('columnWidth', columnWidth);
+        },
+        _applyStyles: function () {
+
+          if (this.columnWidth < 8)
+            return;
+          if (!this._isFit())
+            return;
+
+          var columnMultiplier = 0;
+          if (this.columns <= 2) {
+            columnMultiplier = this.columns;
+          } else {
+            var even = this.columns % 2 === 0;
+            columnMultiplier = even ? 4 : 3;
+          }
+          var gutterMultiplier = columnMultiplier - 1;
+
+          this.customStyle['--grid-margin-width'] = this.margin + 'px';
+          this.customStyle['--grid-gutter-width'] = this.gutter + 'px';
+          this.customStyle['--grid-column-width'] = this.columnWidth + 'px';
+          this.customStyle['--grid-pseudo-content-width'] = this.pageWidth + 'px';
+          this.customStyle['--grid-pseudo-content-box-width'] = (+this.columnWidth * columnMultiplier + +this.gutter * gutterMultiplier) + 'px';
+          this.updateStyles();
+        },
+        _isFit: function () {
+          var prev = Polymer.dom(this.root).querySelector('.grid-preview');
+          if (!prev)
+            return;
+          var containerWidth = prev.scrollWidth;
+          if (containerWidth === 0)
+            return true;
+
+          return containerWidth >= this.pageWidth;
+        }
+      });
+    })();
+  </script>
+
+</dom-module>
